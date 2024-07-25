@@ -51,3 +51,53 @@ window.onload = function () {
     }
   }
 };
+
+var form = document.getElementById("my-form");
+var alertPlaceholder = document.getElementById("alert-placeholder");
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  var data = new FormData(event.target);
+  console.log(data);
+  fetch(event.target.action, {
+    method: form.method,
+    body: data,
+    headers: {
+      Accept: "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        showAlert("Thanks for your message. Talk to you soon!", "success");
+        form.reset();
+      } else {
+        showAlert(
+          "There was a problem with your message. Please try again.",
+          "danger"
+        );
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      showAlert(
+        "There was an error submitting the form. Please try again.",
+        "danger"
+      );
+    });
+}
+
+function showAlert(message, type) {
+  var wrapper = document.createElement("div");
+  wrapper.innerHTML =
+    '<div class="alert alert-' +
+    type +
+    ' alert-dismissible" role="alert">' +
+    message +
+    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+    '<span aria-hidden="true">&times;</span></button></div>';
+
+  alertPlaceholder.appendChild(wrapper);
+}
+
+form.addEventListener("submit", handleSubmit);
+console.log(form);
